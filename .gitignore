@@ -3,6 +3,7 @@
 /node_modules
 /build
 /.github/workflows/README.md
+/k8s/production/secrets/secret.yml
 
 # Logs
 logs
