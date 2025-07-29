@@ -39,6 +39,11 @@ jobs:
         echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > kubeconfig
         export KUBECONFIG=kubeconfig
 
+    - name: Ensure namespace exists
+      run: |
+        export KUBECONFIG=kubeconfig
+        kubectl get namespace fiap || kubectl create namespace fiap
+
     - name: Generate version
       id: version
       run: |
