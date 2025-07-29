@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ms-production
+  name: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ms-production
+      app: backend
   template:
     metadata:
       labels:
-        app: ms-production
+        app: backend
     spec:
       restartPolicy: Always
       containers:
-        - name: ms-production
+        - name: backend
           image: lealfelipealves/fiap-soat-ms-production:latest
           ports:
             - containerPort: 3334
               protocol: TCP
           envFrom:
             - configMapRef:
-                name: ms-production-config
+                name: backend-config
             - secretRef:
-                name: ms-production-secret
+                name: backend-secret
           resources:
             requests:
               cpu: 50m
