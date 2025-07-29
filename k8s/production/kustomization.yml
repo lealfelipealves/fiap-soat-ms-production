@@ -1,0 +1,12 @@
+namespace: fiap
+nameSuffix: "-prod"
+labels:
+  - pairs:
+      application: production
+resources:
+  - namespace.yml
+  - config-map.yml
+  - backend/deployment.yml
+  - backend/service.yml
+  - secrets/cr-image-pull-credentials.yml
+  - secrets/secret.yml

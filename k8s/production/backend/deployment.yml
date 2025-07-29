@@ -1,27 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fastfood-app
+  name: ms-production
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: fastfood-app
+      app: ms-production
   template:
     metadata:
       labels:
-        app: fastfood-app
+        app: ms-production
     spec:
+      restartPolicy: Always
       containers:
-        - name: fastfood-app
-          image: lealfelipealves/fastfood-app:latest
+        - name: ms-production
+          image: lealfelipealves/fiap-soat-ms-production:latest
           ports:
-            - containerPort: 3333
+            - containerPort: 3334
+              protocol: TCP
           envFrom:
             - configMapRef:
-                name: app-config
+                name: ms-production-config
             - secretRef:
-                name: app-secrets
+                name: ms-production-secret
           resources:
             requests:
               cpu: 50m
