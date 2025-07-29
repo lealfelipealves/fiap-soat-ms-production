@@ -8,5 +8,4 @@ resources:
   - config-map.yml
   - backend/deployment.yml
   - backend/service.yml
-  - secrets/cr-image-pull-credentials.yml
   - secrets/secret.yml
