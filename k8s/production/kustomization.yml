@@ -2,7 +2,7 @@ namespace: fiap
 nameSuffix: "-prod"
 labels:
   - pairs:
-      application: production
+      application: ms-production
 resources:
   - namespace.yml
   - config-map.yml

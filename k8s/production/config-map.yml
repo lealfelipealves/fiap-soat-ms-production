@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: backend-config
+  name: ms-production-config
 data:
   IMAGE: 'lealfelipealves/fiap-soat-ms-production:latest'
   TARGET_PORT: '3334'

@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-deployment
+  name: ms-production
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: backend
+      app: ms-production
   template:
     metadata:
       labels:
-        app: backend
+        app: ms-production
     spec:
       restartPolicy: Always
       containers:
@@ -21,9 +21,9 @@ spec:
               protocol: TCP
           envFrom:
             - configMapRef:
-                name: backend-config
+                name: ms-production-config
             - secretRef:
-                name: backend-secret
+                name: ms-production-secret
           resources:
             requests:
               cpu: 50m

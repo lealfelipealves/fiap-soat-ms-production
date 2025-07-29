@@ -59,21 +59,18 @@ jobs:
         envsubst < k8s/production/secrets/secret.yml | kubectl apply -f -
         kubectl apply -k k8s/production/
 
-    - name: Update deployment image (if exists)
+        
+    - name: Update deployment image
       run: |
         export KUBECONFIG=kubeconfig
-        if kubectl get deployment backend-deployment -n fiap >/dev/null 2>&1; then
-          kubectl set image deployment/backend-deployment \
-            backend=${{ env.DOCKERHUB_REGISTRY }}:${{ steps.version.outputs.version }} \
-            -n fiap
-        else
-          echo "⚠️ Deployment backend-deployment não encontrado. Talvez seja o deploy inicial."
-        fi
+        kubectl set image deployment/ms-production-prod \
+          backend=${{ env.DOCKERHUB_REGISTRY }}:${{ steps.version.outputs.version }} \
+          -n fiap
 
     - name: Wait for deployment rollout
       run: |
         export KUBECONFIG=kubeconfig
-        kubectl rollout status deployment/backend-deployment -n fiap --timeout=300s || echo "⚠️ Nenhum rollout a monitorar."
+        kubectl rollout status deployment/ms-production-prod -n fiap --timeout=300s
 
     - name: Verify deployment
       run: |
