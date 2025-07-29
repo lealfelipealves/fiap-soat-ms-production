@@ -52,14 +52,22 @@ jobs:
         else
           echo "version=$(date +'%Y%m%d')-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
         fi
-
+    - name: Create Kubernetes secret
+      run: |
+        export KUBECONFIG=kubeconfig
+        kubectl create secret generic ms-production-secret \
+          --from-literal=APP_PORT=${{ env.APP_PORT }} \
+          --from-literal=DB_URL=${{ env.DB_URL }} \
+          --from-literal=DB_DATABASE=${{ env.DB_DATABASE }} \
+          --from-literal=DB_PORT=${{ env.DB_PORT }} \
+          --from-literal=DB_ROOT_PASSWORD=${{ env.DB_ROOT_PASSWORD }} \
+          -n fiap \
+          --dry-run=client -o yaml | kubectl apply -f -
     - name: Apply Kubernetes manifests
       run: |
         export KUBECONFIG=kubeconfig
-        envsubst < k8s/production/secrets/secret.yml | kubectl apply -f -
         kubectl apply -k k8s/production/
 
-        
     - name: Update deployment image
       run: |
         export KUBECONFIG=kubeconfig
