@@ -8,7 +8,7 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgresql://postgres:docker@fastfood-db:5432/fastfood?schema=public
+      - DB_URL=postgresql://postgres:docker@fastfood-db:5432/fastfood?schema=public
     ports:
       - ${APP_PORT}:${APP_PORT}
     depends_on:
@@ -24,7 +24,7 @@ services:
     env_file:
       - .env
     ports:
-      - ${POSTGRES_PORT}:5432
+      - ${DB_PORT}:5432
     environment:
       - PGDATA=/data/postgres
     volumes:
