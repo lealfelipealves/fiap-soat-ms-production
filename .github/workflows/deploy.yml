@@ -56,8 +56,8 @@ jobs:
     - name: Update deployment image
       run: |
         export KUBECONFIG=kubeconfig
-        kubectl set image deployment/ms-production-deployment \
-          ms-production=${{ env.DOCKERHUB_REGISTRY }}:${{ steps.version.outputs.version }} \
+        kubectl set image deployment/backend-deployment \
+          backend=${{ env.DOCKERHUB_REGISTRY }}:${{ steps.version.outputs.version }} \
           -n fiap
 
     - name: Apply Kubernetes manifests
@@ -69,10 +69,10 @@ jobs:
     - name: Wait for deployment rollout
       run: |
         export KUBECONFIG=kubeconfig
-        kubectl rollout status deployment/ms-production-deployment -n fiap --timeout=300s
+        kubectl rollout status deployment/backend-deployment -n fiap --timeout=300s
 
     - name: Verify deployment
       run: |
         export KUBECONFIG=kubeconfig
-        kubectl get pods -n fiap -l app=ms-production
+        kubectl get pods -n fiap -l app=backend
         kubectl get services -n fiap
