@@ -281,6 +281,8 @@ describe('GetProductionQueueController', () => {
         },
         new UniqueEntityID('order-1')
       )
+      // Remover o status para simular um order sem status
+      order.status = undefined as any
       order.products = new OrderProductList([])
 
       mockGetAllOrder.execute.mockResolvedValue(right({ orders: [order] }))

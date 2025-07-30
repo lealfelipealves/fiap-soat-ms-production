@@ -1,4 +1,8 @@
 import { left, right } from '@/core/either'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { Customer } from '@/domain/fastfood/enterprise/entities'
+import { Cpf } from '@/domain/fastfood/enterprise/entities/value-objects/cpf'
+import { Email } from '@/domain/fastfood/enterprise/entities/value-objects/email'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { CreateCustomerController } from './create-customer.controller'
 
@@ -15,18 +19,20 @@ describe('Create Customer Controller', () => {
   })
 
   it('should be able to create a customer', async () => {
-    const mockCustomer = {
-      id: 'customer-1',
-      name: 'John Doe',
-      email: 'john@example.com',
-      cpf: '123.456.789-01'
-    }
+    const mockCustomer = Customer.create(
+      {
+        name: 'John Doe',
+        email: Email.create('john@example.com'),
+        cpf: Cpf.create('12345678909')
+      },
+      new UniqueEntityID('customer-1')
+    )
 
     mockCreateCustomerUseCase.execute.mockResolvedValue(
       right({ customer: mockCustomer })
     )
 
-    const result = await sut.handle('12345678901', {
+    const result = await sut.handle('12345678909', {
       name: 'John Doe',
       email: 'john@example.com'
     })
@@ -36,12 +42,12 @@ describe('Create Customer Controller', () => {
         id: 'customer-1',
         name: 'John Doe',
         email: 'john@example.com',
-        cpf: '123.456.789-01'
+        cpf: '123.456.789-09'
       }
     })
 
     expect(mockCreateCustomerUseCase.execute).toHaveBeenCalledWith({
-      cpf: '12345678901',
+      cpf: '12345678909',
       name: 'John Doe',
       email: 'john@example.com'
     })

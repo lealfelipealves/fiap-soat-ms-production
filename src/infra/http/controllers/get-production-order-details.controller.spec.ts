@@ -224,18 +224,44 @@ describe('GetProductionOrderDetailsController', () => {
         cpf: '987.654.321-00'
       })
 
-      mockMicroserviceCommunication.getProductById.mockResolvedValue({
-        id: 'product-1',
-        name: 'X-Burger',
-        description: 'Delicious burger',
-        price: 15.99,
-        category: 'Lanche'
-      })
+      // Mock para todos os produtos
+      mockMicroserviceCommunication.getProductById
+        .mockResolvedValueOnce({
+          id: 'product-1',
+          name: 'X-Burger',
+          description: 'Delicious burger',
+          price: 15.99,
+          category: 'Lanche'
+        })
+        .mockResolvedValueOnce({
+          id: 'product-2',
+          name: 'Batata Frita',
+          description: 'Crispy fries',
+          price: 8.99,
+          category: 'Acompanhamento'
+        })
+        .mockResolvedValueOnce({
+          id: 'product-3',
+          name: 'Coca-Cola',
+          description: 'Refrigerante',
+          price: 5.99,
+          category: 'Bebida'
+        })
 
       const result = await sut.handle(orderId)
 
       expect(result.productionInfo.estimatedTime).toBeGreaterThan(0)
-      expect(result.productionInfo.notes).toContain('X-Burger')
+      expect(
+        result.productionInfo.notes.some((note) => note.includes('X-Burger'))
+      ).toBe(true)
+      expect(
+        result.productionInfo.notes.some((note) =>
+          note.includes('Batata Frita')
+        )
+      ).toBe(true)
+      expect(
+        result.productionInfo.notes.some((note) => note.includes('Coca-Cola'))
+      ).toBe(true)
     })
 
     it('should generate correct production notes for different product categories', async () => {
