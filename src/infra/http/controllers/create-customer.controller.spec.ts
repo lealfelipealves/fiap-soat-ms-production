@@ -1,3 +1,4 @@
+import { left, right } from '@/core/either'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { CreateCustomerController } from './create-customer.controller'
 
@@ -18,42 +19,50 @@ describe('Create Customer Controller', () => {
       id: 'customer-1',
       name: 'John Doe',
       email: 'john@example.com',
-      cpf: '12345678901'
+      cpf: '123.456.789-01'
     }
 
-    mockCreateCustomerUseCase.execute.mockResolvedValue({
-      isRight: () => true,
-      value: { customer: mockCustomer }
-    })
+    mockCreateCustomerUseCase.execute.mockResolvedValue(
+      right({ customer: mockCustomer })
+    )
 
-    const result = await sut.handle({
+    const result = await sut.handle('12345678901', {
       name: 'John Doe',
-      email: 'john@example.com',
-      cpf: '12345678901'
+      email: 'john@example.com'
     })
 
-    expect(result.statusCode).toBe(201)
-    expect(result.body).toEqual({ customer: mockCustomer })
+    expect(result).toEqual({
+      customer: {
+        id: 'customer-1',
+        name: 'John Doe',
+        email: 'john@example.com',
+        cpf: '123.456.789-01'
+      }
+    })
+
     expect(mockCreateCustomerUseCase.execute).toHaveBeenCalledWith({
+      cpf: '12345678901',
       name: 'John Doe',
-      email: 'john@example.com',
-      cpf: '12345678901'
+      email: 'john@example.com'
     })
   })
 
   it('should return error when use case fails', async () => {
-    mockCreateCustomerUseCase.execute.mockResolvedValue({
-      isRight: () => false,
-      value: { message: 'Invalid email' }
-    })
+    mockCreateCustomerUseCase.execute.mockResolvedValue(
+      left(new Error('Invalid email'))
+    )
 
-    const result = await sut.handle({
+    await expect(
+      sut.handle('12345678901', {
+        name: 'John Doe',
+        email: 'invalid-email'
+      })
+    ).rejects.toThrow()
+
+    expect(mockCreateCustomerUseCase.execute).toHaveBeenCalledWith({
+      cpf: '12345678901',
       name: 'John Doe',
-      email: 'invalid-email',
-      cpf: '12345678901'
+      email: 'invalid-email'
     })
-
-    expect(result.statusCode).toBe(400)
-    expect(result.body).toEqual({ message: 'Invalid email' })
   })
 })

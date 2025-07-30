@@ -1,3 +1,6 @@
+import { left, right } from '@/core/either'
+import { Category } from '@/domain/fastfood/enterprise/entities/value-objects'
+import { makeProduct } from 'test/factories/make-product'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { CreateProductController } from './create-product.controller'
 
@@ -14,18 +17,14 @@ describe('Create Product Controller', () => {
   })
 
   it('should be able to create a product', async () => {
-    const mockProduct = {
-      id: 'product-1',
+    const product = makeProduct({
       name: 'X-Burger',
       description: 'Delicious burger',
       price: 15.99,
-      category: 'Lanche'
-    }
-
-    mockCreateProductUseCase.execute.mockResolvedValue({
-      isRight: () => true,
-      value: { product: mockProduct }
+      category: Category.create('Lanche')
     })
+
+    mockCreateProductUseCase.execute.mockResolvedValue(right({ product }))
 
     const result = await sut.handle({
       name: 'X-Burger',
@@ -34,8 +33,16 @@ describe('Create Product Controller', () => {
       category: 'Lanche'
     })
 
-    expect(result.statusCode).toBe(201)
-    expect(result.body).toEqual({ product: mockProduct })
+    expect(result).toEqual({
+      product: {
+        id: product.id.toString(),
+        name: 'X-Burger',
+        description: 'Delicious burger',
+        price: 15.99,
+        category: 'Lanche'
+      }
+    })
+
     expect(mockCreateProductUseCase.execute).toHaveBeenCalledWith({
       name: 'X-Burger',
       description: 'Delicious burger',
@@ -45,19 +52,24 @@ describe('Create Product Controller', () => {
   })
 
   it('should return error when use case fails', async () => {
-    mockCreateProductUseCase.execute.mockResolvedValue({
-      isRight: () => false,
-      value: { message: 'Invalid price' }
-    })
+    mockCreateProductUseCase.execute.mockResolvedValue(
+      left(new Error('Invalid price'))
+    )
 
-    const result = await sut.handle({
+    await expect(
+      sut.handle({
+        name: 'X-Burger',
+        description: 'Delicious burger',
+        price: -10,
+        category: 'Lanche'
+      })
+    ).rejects.toThrow()
+
+    expect(mockCreateProductUseCase.execute).toHaveBeenCalledWith({
       name: 'X-Burger',
       description: 'Delicious burger',
       price: -10,
       category: 'Lanche'
     })
-
-    expect(result.statusCode).toBe(400)
-    expect(result.body).toEqual({ message: 'Invalid price' })
   })
 })

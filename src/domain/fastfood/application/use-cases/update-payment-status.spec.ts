@@ -61,12 +61,12 @@ describe('Update Payment Status', () => {
 
     const result = await sut.execute({
       id: 'order-1',
-      paymentStatus: 'Rejeitado'
+      paymentStatus: 'Recusado'
     })
 
     expect(result.isRight()).toBe(true)
     if (result.isRight()) {
-      expect(result.value.order.paymentStatus?.getValue()).toBe('Rejeitado')
+      expect(result.value.order.paymentStatus?.getValue()).toBe('Recusado')
     }
   })
 })
