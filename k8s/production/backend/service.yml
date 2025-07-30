@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: ms-production-svc
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: ms-production
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 3334
+      targetPort: 3333
