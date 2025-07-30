@@ -8,10 +8,27 @@
 # Microserviço Produção
 Responsável por operacionalizar o processo de produção do pedido, acompanhando a fila de pedidos (visão da cozinha), atualização de status de cada passo do pedido.
 
+## 📖 Swagger
+
+Para acessar a documentação do swagger
+
+<a href="http://localhost:3333/docs" target="_blank">Link para acessar o swagger localmente</a>
+
+```bash
+http://localhost:3333/docs
+```
+<img width="1843" height="1351" alt="image" src="https://github.com/user-attachments/assets/031afd01-b015-487f-ae8e-de0a3fdb70b9" />
+
+
+## Cobertura de testes
+<img width="1871" height="1332" alt="image" src="https://github.com/user-attachments/assets/4fd9db46-532a-4577-8324-9c0fd67d7c04" />
+
+
 
 ## 📄 Descrição
 
 Este projeto é parte do **Software Architecture Tech Challenge - Fase 2**. Ele engloba o desenvolvimento de uma aplicação backend monolítica utilizando **NestJS** e seguindo boas práticas de **DDD (Domain-Driven Design)**, **Clean Code e Clean Architecture:**, **Docker**, **Kubernetes** para uma implementação robusta e escalável.
+
 
 ## 🛠 Tecnologias Utilizadas
 
@@ -74,17 +91,7 @@ npm install;
 npx prisma db seed;
 ```
 
-## 📖 Swagger
 
-Para acessar a documentação do swagger
-
-<a href="http://localhost:3333/docs" target="_blank">Link para acessar o swagger localmente</a>
-
-```bash
-http://localhost:3333/docs
-```
-
-![image](https://github.com/user-attachments/assets/2186718b-0ab3-4af1-8267-1514fe908153)
 
 ## ▶️ Executar o projeto
 
